@@ -10,7 +10,8 @@ import 'package:voyage/pages/inscription.page.dart';
 import 'package:voyage/pages/meteo.page.dart';
 import 'package:voyage/pages/parametres.page.dart';
 import 'package:voyage/pages/pays.page.dart';
-
+import 'package:easy_localization/easy_localization.dart';
+import 'package:voyage/utils/localization_service.dart';
 import 'firebase_options.dart';
 
 final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.system);
@@ -20,6 +21,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await LocalizationService.loadLanguage();
   runApp(MyApp());
 }
 

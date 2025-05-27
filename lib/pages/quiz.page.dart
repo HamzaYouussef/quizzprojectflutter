@@ -102,6 +102,7 @@ class _QuizPageState extends State<QuizPage> with SingleTickerProviderStateMixin
 
 
 
+
   void _playClapSound() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getBool('soundEnabled') ?? true) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:voyage/main.dart';
 import 'package:voyage/menu/drawer.widget.dart';
+import 'package:voyage/utils/localization_service.dart';
 
 class ParametresPage extends StatefulWidget {
   const ParametresPage({Key? key}) : super(key: key);
@@ -13,6 +14,7 @@ class ParametresPage extends StatefulWidget {
 class _ParametresPageState extends State<ParametresPage> {
   bool _soundEnabled = true;
   bool _vibrationEnabled = true;
+  String _selectedLang = LocalizationService.currentLang;
 
   @override
   void initState() {
@@ -34,6 +36,14 @@ class _ParametresPageState extends State<ParametresPage> {
     await prefs.setBool('vibrationEnabled', _vibrationEnabled);
   }
 
+  void _changeLanguage(String? lang) async {
+    if (lang == null) return;
+    await LocalizationService.changeLanguage(lang);
+    setState(() {
+      _selectedLang = lang;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,12 +53,9 @@ class _ParametresPageState extends State<ParametresPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Paramètres',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+            Text(
+              LocalizationService.t('settings'),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 30),
 
@@ -58,7 +65,7 @@ class _ParametresPageState extends State<ParametresPage> {
               builder: (context, mode, child) {
                 return Card(
                   child: ListTile(
-                    title: const Text('Mode Sombre'),
+                    title: Text(LocalizationService.t('dark_mode')),
                     trailing: Switch(
                       value: mode == ThemeMode.dark,
                       onChanged: (value) {
@@ -75,7 +82,7 @@ class _ParametresPageState extends State<ParametresPage> {
             // 🔊 Sound Toggle
             Card(
               child: ListTile(
-                title: const Text('Activer les effets sonores'),
+                title: Text(LocalizationService.t('sound')),
                 trailing: Switch(
                   value: _soundEnabled,
                   onChanged: (value) {
@@ -91,7 +98,7 @@ class _ParametresPageState extends State<ParametresPage> {
             // 📳 Vibration Toggle
             Card(
               child: ListTile(
-                title: const Text('Activer les vibrations'),
+                title: Text(LocalizationService.t('vibration')),
                 trailing: Switch(
                   value: _vibrationEnabled,
                   onChanged: (value) {
@@ -100,6 +107,21 @@ class _ParametresPageState extends State<ParametresPage> {
                     });
                     _saveSettings();
                   },
+                ),
+              ),
+            ),
+
+            // 🌐 Language Switcher
+            Card(
+              child: ListTile(
+                title: Text(LocalizationService.t('language')),
+                trailing: DropdownButton<String>(
+                  value: _selectedLang,
+                  onChanged: _changeLanguage,
+                  items: const [
+                    DropdownMenuItem(value: 'en', child: Text('English')),
+                    DropdownMenuItem(value: 'fr', child: Text('Français')),
+                  ],
                 ),
               ),
             ),
